@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NIMCET Advanced Limits Test - 25 Questions</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        :root{--bg:#0f1117;--surface:#1a1d27;--surface2:#21253a;--border:#2e3348;--accent:#4f7eff;--accent2:#7c5cfc;--green:#22c55e;--red:#ef4444;--orange:#f59e0b;--text:#e2e8f0;--muted:#8892a4;--radius:12px}
+        *{box-sizing:border-box;margin:0;padding:0}
+        body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+        .header{background:linear-gradient(135deg,#1a2040 0%,#0f1117 60%,#1a1030 100%);border-bottom:1px solid var(--border);padding:24px 40px;position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;gap:20px}
+        .header-left h1{font-size:1.35rem;font-weight:800;background:linear-gradient(135deg,#4f7eff,#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+        .header-left p{color:var(--muted);font-size:.8rem;margin-top:3px}
+        .header-right{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+        .badge{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:5px 12px;font-size:.78rem;font-weight:600;color:var(--muted)}
+        .badge span{color:var(--text)}
+        .progress-wrap{background:var(--surface2);border-bottom:1px solid var(--border);padding:9px 40px;display:flex;align-items:center;gap:14px}
+        .progress-bar{flex:1;height:6px;background:var(--border);border-radius:99px;overflow:hidden}
+        .progress-fill{height:100%;width:0%;background:linear-gradient(90deg,#4f7eff,#a78bfa);border-radius:99px;transition:width .4s ease}
+        .progress-label{font-size:.77rem;color:var(--muted);white-space:nowrap}
+        .instructions{max-width:900px;margin:28px auto 0;padding:0 24px}
+        .instr-box{background:var(--surface);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:var(--radius);padding:14px 18px;font-size:.87rem;color:var(--muted);line-height:1.7}
+        .instr-box strong{color:var(--text)}
+        .questions-wrap{max-width:900px;margin:0 auto;padding:22px 24px;display:flex;flex-direction:column;gap:16px}
+        .question-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px 22px;transition:border-color .2s}
+        .question-card.answered{border-color:#2e4a7a}
+        .q-header{display:flex;align-items:flex-start;gap:12px;margin-bottom:14px}
+        .q-num{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;font-size:.73rem;font-weight:700;padding:4px 10px;border-radius:6px;white-space:nowrap;flex-shrink:0;margin-top:2px}
+        .q-text{font-size:.97rem;font-weight:500;line-height:1.7;color:var(--text)}
+        .options{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+        @media(max-width:600px){.options{grid-template-columns:1fr}.header{padding:14px 18px;flex-direction:column;align-items:flex-start}.progress-wrap{padding:9px 18px}.instructions,.questions-wrap{padding:14px}}
+        .option-btn{display:flex;align-items:center;gap:10px;background:var(--surface2);border:1.5px solid var(--border);border-radius:8px;padding:10px 13px;cursor:pointer;font-family:'Inter',sans-serif;font-size:.88rem;color:var(--text);text-align:left;transition:all .18s ease;width:100%;line-height:1.5}
+        .option-btn:not([disabled]):hover{border-color:var(--accent);background:#1e2640}
+        .option-btn .opt-letter{width:26px;height:26px;border-radius:50%;background:var(--border);display:flex;align-items:center;justify-content:center;font-size:.73rem;font-weight:700;flex-shrink:0;transition:all .18s}
+        .option-btn.selected{border-color:var(--accent);background:rgba(79,126,255,.1)}
+        .option-btn.selected .opt-letter{background:var(--accent);color:#fff}
+        .option-btn[disabled]{cursor:not-allowed}
+        .submit-area{max-width:900px;margin:0 auto 60px;padding:0 24px;text-align:center}
+        .unanswered-warn{color:var(--orange);font-size:.84rem;margin-bottom:12px;display:none}
+        #submit-btn{background:linear-gradient(135deg,#4f7eff,#7c5cfc);border:none;border-radius:10px;padding:13px 46px;font-size:.97rem;font-weight:700;color:#fff;cursor:pointer;font-family:'Inter',sans-serif;transition:opacity .2s,transform .15s;box-shadow:0 4px 20px rgba(79,126,255,.3)}
+        #submit-btn:hover{opacity:.9;transform:translateY(-1px)}
+        #submit-btn:active{transform:translateY(0)}
+        /* SCORECARD */
+        #scorecard-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(6px);z-index:999;overflow-y:auto;padding:30px 16px 60px}
+        #scorecard-overlay.visible{display:block}
+        .scorecard{max-width:760px;margin:0 auto;background:var(--surface);border:1px solid var(--border);border-radius:20px;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.6);animation:slideUp .4s cubic-bezier(.34,1.56,.64,1)}
+        @keyframes slideUp{from{opacity:0;transform:translateY(40px)}to{opacity:1;transform:translateY(0)}}
+        .sc-hero{background:linear-gradient(135deg,#1a2040,#150f2a);padding:38px 36px 28px;text-align:center;position:relative;overflow:hidden}
+        .sc-hero::before{content:'';position:absolute;width:300px;height:300px;background:radial-gradient(circle,rgba(79,126,255,.15) 0%,transparent 70%);top:-60px;left:50%;transform:translateX(-50%);pointer-events:none}
+        .sc-title{font-size:.9rem;color:var(--muted);text-transform:uppercase;letter-spacing:2px;font-weight:600;margin-bottom:8px}
+        .sc-score-big{font-size:3.6rem;font-weight:800;background:linear-gradient(135deg,#4f7eff,#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1.1}
+        .sc-score-sub{color:var(--muted);font-size:.88rem;margin-top:5px}
+        .sc-grade{display:inline-block;margin-top:14px;padding:5px 18px;border-radius:99px;font-size:.83rem;font-weight:700;letter-spacing:1px}
+        .sc-stats{display:grid;grid-template-columns:repeat(4,1fr);border-bottom:1px solid var(--border)}
+        @media(max-width:560px){.sc-stats{grid-template-columns:repeat(2,1fr)}}
+        .sc-stat{padding:18px 14px;text-align:center;border-right:1px solid var(--border)}
+        .sc-stat:last-child{border-right:none}
+        @media(max-width:560px){.sc-stat:nth-child(2){border-right:none}.sc-stat:nth-child(3),.sc-stat:nth-child(4){border-top:1px solid var(--border)}}
+        .sc-stat-val{font-size:1.65rem;font-weight:800}
+        .sc-stat-val.c{color:var(--green)}.sc-stat-val.w{color:var(--red)}.sc-stat-val.s{color:var(--orange)}.sc-stat-val.u{color:var(--muted)}
+        .sc-stat-label{font-size:.73rem;color:var(--muted);margin-top:4px;font-weight:500}
+        .sc-review-head{padding:18px 26px 10px;font-size:.82rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1.5px;border-bottom:1px solid var(--border)}
+        .sc-review-list{padding:0;list-style:none;max-height:400px;overflow-y:auto}
+        .sc-review-list::-webkit-scrollbar{width:5px}
+        .sc-review-list::-webkit-scrollbar-thumb{background:var(--border);border-radius:99px}
+        .sc-item{display:flex;align-items:flex-start;gap:12px;padding:13px 26px;border-bottom:1px solid var(--border);font-size:.85rem}
+        .sc-item:last-child{border-bottom:none}
+        .sc-item-icon{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.78rem;font-weight:700;flex-shrink:0;margin-top:2px}
+        .sc-item-icon.correct{background:rgba(34,197,94,.15);color:var(--green)}
+        .sc-item-icon.wrong{background:rgba(239,68,68,.15);color:var(--red)}
+        .sc-item-icon.skipped{background:rgba(148,163,184,.1);color:var(--muted)}
+        .sc-item-body{flex:1;min-width:0}
+        .sc-item-q{font-weight:600;color:var(--text);margin-bottom:4px;line-height:1.5}
+        .sc-item-ans{color:var(--muted);font-size:.8rem}
+        .sc-item-ans .your-ans{color:var(--text);font-weight:600}
+        .sc-item-ans .correct-ans{color:var(--green);font-weight:600}
+        .sc-item-marks{font-size:.83rem;font-weight:700;white-space:nowrap;margin-top:2px}
+        .sc-item-marks.pos{color:var(--green)}.sc-item-marks.neg{color:var(--red)}.sc-item-marks.zero{color:var(--muted)}
+        .sc-footer{padding:18px 26px;display:flex;justify-content:center;gap:12px;border-top:1px solid var(--border)}
+        .sc-btn{padding:9px 26px;border-radius:8px;font-family:'Inter',sans-serif;font-size:.88rem;font-weight:600;cursor:pointer;border:none;transition:opacity .2s}
+        .sc-btn:hover{opacity:.85}
+        .sc-btn-primary{background:linear-gradient(135deg,#4f7eff,#7c5cfc);color:#fff}
+        .sc-btn-secondary{background:var(--surface2);color:var(--text);border:1px solid var(--border)}
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <div class="header-left">
+        <h1>NIMCET — Limits &amp; Continuity</h1>
+        <p>Advanced Mock Test &nbsp;·&nbsp; MCA Entrance Preparation</p>
+    </div>
+    <div class="header-right">
+        <div class="badge">Questions: <span>25</span></div>
+        <div class="badge">Max Marks: <span>100</span></div>
+        <div class="badge">Marking: <span>+4 / −1</span></div>
+    </div>
+</div>
+
+<div class="progress-wrap">
+    <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+    <div class="progress-label" id="progress-label">0 / 25 answered</div>
+</div>
+
+<div class="instructions">
+    <div class="instr-box">
+        <strong>📋 Instructions:</strong> &nbsp;Sabhi 25 questions attempt karo. Har sahi jawab <strong>+4</strong>, galat <strong>−1</strong>.
+        &nbsp;<strong>⚠️ Ek baar option select karne ke baad badla nahi ja sakta.</strong>
+        Sab attempt karne ke baad <em>Submit Test</em> dabao.
+    </div>
+</div>
+
+<div class="questions-wrap" id="questions-wrap"></div>
+
+<div class="submit-area">
+    <div class="unanswered-warn" id="unanswered-warn"></div>
+    <button id="submit-btn" onclick="submitTest()">Submit Test</button>
+</div>
+
+<!-- SCORECARD OVERLAY -->
+<div id="scorecard-overlay">
+    <div class="scorecard">
+        <div class="sc-hero">
+            <div class="sc-title">Test Completed</div>
+            <div class="sc-score-big" id="sc-score"></div>
+            <div class="sc-score-sub">out of 100 marks</div>
+            <div class="sc-grade" id="sc-grade"></div>
+        </div>
+        <div class="sc-stats">
+            <div class="sc-stat"><div class="sc-stat-val c" id="sc-correct">0</div><div class="sc-stat-label">✅ Correct</div></div>
+            <div class="sc-stat"><div class="sc-stat-val w" id="sc-wrong">0</div><div class="sc-stat-label">❌ Wrong</div></div>
+            <div class="sc-stat"><div class="sc-stat-val s" id="sc-skipped">0</div><div class="sc-stat-label">⏭ Skipped</div></div>
+            <div class="sc-stat"><div class="sc-stat-val u" id="sc-accuracy">0%</div><div class="sc-stat-label">🎯 Accuracy</div></div>
+        </div>
+        <div class="sc-review-head">Question-wise Review</div>
+        <ul class="sc-review-list" id="sc-review-list"></ul>
+        <div class="sc-footer">
+            <button class="sc-btn sc-btn-secondary" onclick="closeScorecard()">Review Answers</button>
+            <button class="sc-btn sc-btn-primary" onclick="window.print()">🖨 Print Result</button>
+        </div>
+    </div>
+</div>
+
+<script>
+const QUESTIONS=[
+{text:"1. The value of \\(\\lim_{x \\to 0} (\\cot x)^{\\sin 2x}\\) is equal to:",opts:["\\(1\\)","\\(e^2\\)","\\(e^{-2}\\)","\\(0\\)"],correct:2},
+{text:"2. If \\(\\lim_{x \\to 0} \\dfrac{a \\sin x - \\sin 2x}{\\tan^3 x}\\) is finite and non-zero, the values of \\(a\\) and the limit are:",opts:["\\(2,\\,-2\\)","\\(a=2,\\;\\text{limit}=-\\tfrac{1}{3}\\)","\\(2,\\,2\\)","\\(1,\\,2\\)"],correct:1},
+{text:"3. The value of \\(\\lim_{n \\to \\infty} \\sum_{r=1}^{n} \\dfrac{r}{n^2} \\sec^2\\!\\left(\\dfrac{r^2\\pi}{n^2}\\right)\\) is:",opts:["\\(\\dfrac{\\pi}{4}\\)","\\(\\dfrac{1}{2\\pi}\\)","\\(\\dfrac{1}{\\pi}\\)","\\(\\dfrac{\\ln 2}{\\pi}\\)"],correct:2},
+{text:"4. Let \\(f(x)=\\lim_{n\\to\\infty}\\dfrac{x^{2n}-1}{x^{2n}+1}\\). The set of discontinuity points is:",opts:["\\(\\{\\}\\) (empty set)","\\(\\{1,\\,-1\\}\\)","\\(\\{0\\}\\)","\\((-1,\\,1)\\)"],correct:1},
+{text:"5. The value of \\(\\lim_{x\\to 0}\\left(\\dfrac{\\tan(\\sin x)}{x}\\right)^{1/x^2}\\) is:",opts:["\\(e^{1/6}\\)","\\(e^{1/3}\\)","\\(e^{-1/6}\\)","\\(1\\)"],correct:0},
+{text:"6. If \\(\\lim_{x\\to 0}\\dfrac{x+a\\cos x-b\\sin x}{x^3}=1\\), then \\(a\\) and \\(b\\) are:",opts:["\\(a=-\\tfrac{1}{2},\\;b=1\\)","\\(a=\\tfrac{1}{3},\\;b=1\\)","\\(a=1,\\;b=-\\tfrac{1}{2}\\)","\\(a=-\\tfrac{1}{3},\\;b=1\\)"],correct:3},
+{text:"7. The value of \\(\\lim_{x\\to 0}\\dfrac{(1-\\cos(x^2))\\sin(2x)}{x\\sin^3(x)}\\) is:",opts:["\\(1\\)","\\(2\\)","\\(\\tfrac{1}{2}\\)","\\(4\\)"],correct:1},
+{text:"8. The value of \\(\\lim_{x\\to 0}\\dfrac{\\ln(1+x+x^2)+\\ln(1-x+x^2)}{\\sec x-\\cos x}\\) is:",opts:["\\(1\\)","\\(2\\)","\\(-1\\)","\\(0\\)"],correct:1},
+{text:"9. If \\(f(x)=x\\cdot\\left[\\dfrac{2x}{\\lfloor x\\rfloor}\\right]\\) for \\(x>0\\), then \\(\\lim_{x\\to 2^+}f(x)\\) is:",opts:["\\(2\\)","\\(4\\)","\\(6\\)","Does not exist"],correct:2},
+{text:"10. The value of \\(\\lim_{x\\to 0}\\left(\\tan\\!\\left(\\dfrac{\\pi}{4}+x\\right)\\right)^{1/x}\\) is:",opts:["\\(e\\)","\\(e^2\\)","\\(1\\)","\\(e^{-1}\\)"],correct:1},
+{text:"11. The value of \\(\\lim_{x\\to 1}\\dfrac{x^n-nx+n-1}{(x-1)^2}\\) is:",opts:["\\(\\dfrac{n(n-1)}{2}\\)","\\(\\dfrac{n(n+1)}{2}\\)","\\(n(n-1)\\)","\\(\\dfrac{n^2}{2}\\)"],correct:0},
+{text:"12. If \\(\\lim_{x\\to 0}\\dfrac{e^x-e^{-x}-2x}{x\\sin^2 x}=k\\), then \\(k=\\)",opts:["\\(\\tfrac{1}{3}\\)","\\(\\tfrac{2}{3}\\)","\\(1\\)","\\(2\\)"],correct:1},
+{text:"13. The value of \\(\\lim_{x\\to 0}\\dfrac{\\sin x-x\\cos x}{x^3}\\) is:",opts:["\\(\\tfrac{1}{2}\\)","\\(\\tfrac{1}{3}\\)","\\(\\tfrac{1}{6}\\)","\\(1\\)"],correct:2},
+{text:"14. If \\(\\lim_{x\\to 0}(1+x+f(x))^{1/x}=e^3\\), then \\(\\lim_{x\\to 0}\\dfrac{f(x)}{x}\\) is:",opts:["\\(1\\)","\\(2\\)","\\(3\\)","\\(0\\)"],correct:2},
+{text:"15. The value of \\(\\lim_{x\\to 0}\\dfrac{\\sin(a+x)-\\sin(a-x)}{x}\\) is:",opts:["\\(2\\sin a\\)","\\(2\\cos a\\)","\\(\\cos a\\)","\\(\\sin a\\)"],correct:1},
+{text:"16. The value of \\(\\lim_{x\\to 0}\\dfrac{\\arcsin x-\\arctan x}{x^3}\\) is:",opts:["\\(\\tfrac{1}{2}\\)","\\(\\tfrac{1}{3}\\)","\\(\\tfrac{1}{6}\\)","\\(\\tfrac{1}{4}\\)"],correct:2},
+{text:"17. The value of \\(\\lim_{n\\to\\infty}\\dfrac{1^3+2^3+\\cdots+n^3}{n^4+2n^2}\\) is:",opts:["\\(\\tfrac{1}{4}\\)","\\(\\tfrac{1}{2}\\)","\\(\\tfrac{1}{3}\\)","\\(1\\)"],correct:0},
+{text:"18. If \\(f(x)=\\dfrac{x^2-4}{x-2}\\) for \\(x\\neq2\\) and \\(k\\) for \\(x=2\\) is continuous, then \\(k=\\)?",opts:["\\(2\\)","\\(4\\)","\\(0\\)","\\(-4\\)"],correct:1},
+{text:"19. The value of \\(\\lim_{x\\to 0}\\dfrac{\\ln(1+2x)-2\\ln(1+x)}{x^2}\\) is:",opts:["\\(-1\\)","\\(1\\)","\\(0\\)","\\(2\\)"],correct:0},
+{text:"20. The value of \\(\\lim_{x\\to\\infty}(\\sqrt{x^2+x}-x)\\) is:",opts:["\\(0\\)","\\(\\tfrac{1}{2}\\)","\\(1\\)","\\(\\infty\\)"],correct:1},
+{text:"21. The value of \\(\\lim_{x\\to 0}\\dfrac{a^x-1}{b^x-1}\\) (where \\(a,b>0,\\,b\\neq1\\)) is:",opts:["\\(\\log_b a\\)","\\(\\log_a b\\)","\\(\\dfrac{a}{b}\\)","\\(1\\)"],correct:0},
+{text:"22. The value of \\(\\lim_{x\\to 0}\\dfrac{\\cos(ax)-\\cos(bx)}{x^2}\\) is:",opts:["\\(\\dfrac{b^2-a^2}{2}\\)","\\(\\dfrac{a^2-b^2}{2}\\)","\\(a^2-b^2\\)","\\(0\\)"],correct:0},
+{text:"23. The value of \\(\\lim_{x\\to 0}\\dfrac{x\\cot(4x)}{\\sin^2 x\\cot^2(2x)}\\) is:",opts:["\\(1\\)","\\(2\\)","\\(4\\)","\\(8\\)"],correct:0},
+{text:"24. Let \\(f(x)=\\dfrac{|x|}{x}\\) for \\(x\\neq0\\), \\(f(0)=0\\). Then \\(\\lim_{x\\to 0}f(x)\\):",opts:["is equal to \\(1\\)","is equal to \\(-1\\)","is equal to \\(0\\)","does not exist"],correct:3},
+{text:"25. The value of \\(\\lim_{x\\to 0}\\dfrac{(1+x)^{1/x}-e}{x}\\) is:",opts:["\\(-\\dfrac{e}{2}\\)","\\(\\dfrac{e}{2}\\)","\\(-e\\)","\\(e\\)"],correct:0}
+];
+
+const userAnswers=new Array(QUESTIONS.length).fill(null);
+
+function buildQuestions(){
+    const wrap=document.getElementById('questions-wrap');
+    const L=['a','b','c','d'];
+    QUESTIONS.forEach((q,qi)=>{
+        const card=document.createElement('div');
+        card.className='question-card';card.id='qcard-'+qi;
+        card.innerHTML=`<div class="q-header"><span class="q-num">Q${qi+1}</span><div class="q-text">${q.text}</div></div>
+        <div class="options">${q.opts.map((o,oi)=>`<button class="option-btn" id="opt-${qi}-${oi}" onclick="selectOption(${qi},${oi})"><span class="opt-letter">${L[oi]}</span><span>${o}</span></button>`).join('')}</div>`;
+        wrap.appendChild(card);
+    });
+}
+
+function selectOption(qi,oi){
+    if(userAnswers[qi]!==null)return;
+    userAnswers[qi]=oi;
+    document.getElementById('opt-'+qi+'-'+oi).classList.add('selected');
+    for(let i=0;i<4;i++){const b=document.getElementById('opt-'+qi+'-'+i);if(b)b.disabled=true;}
+    document.getElementById('qcard-'+qi).classList.add('answered');
+    updateProgress();
+}
+
+function updateProgress(){
+    const ans=userAnswers.filter(a=>a!==null).length;
+    document.getElementById('progress-fill').style.width=(ans/QUESTIONS.length*100)+'%';
+    document.getElementById('progress-label').textContent=ans+' / '+QUESTIONS.length+' answered';
+}
+
+function submitTest(){
+    const un=userAnswers.filter(a=>a===null).length;
+    const w=document.getElementById('unanswered-warn');
+    if(un>0){
+        w.style.display='block';
+        w.textContent='⚠️ '+un+' question'+(un>1?'s':'')+' unanswered. Confirm karo?';
+        const btn=document.getElementById('submit-btn');
+        btn.textContent='Confirm Submit ✓';
+        btn.onclick=showScorecard;
+        return;
+    }
+    showScorecard();
+}
+
+function showScorecard(){
+    let correct=0,wrong=0,skipped=0,marks=0;
+    userAnswers.forEach((ans,i)=>{
+        if(ans===null)skipped++;
+        else if(ans===QUESTIONS[i].correct){correct++;marks+=4;}
+        else{wrong++;marks-=1;}
+    });
+    const accuracy=correct+wrong>0?Math.round(correct/(correct+wrong)*100):0;
+    document.getElementById('sc-score').textContent=marks;
+    document.getElementById('sc-correct').textContent=correct;
+    document.getElementById('sc-wrong').textContent=wrong;
+    document.getElementById('sc-skipped').textContent=skipped;
+    document.getElementById('sc-accuracy').textContent=accuracy+'%';
+
+    const ge=document.getElementById('sc-grade');
+    let grade,gc;
+    if(marks>=90){grade='🏆 Exceptional';gc='#22c55e';}
+    else if(marks>=75){grade='⭐ Excellent';gc='#4f7eff';}
+    else if(marks>=60){grade='👍 Good';gc='#7c5cfc';}
+    else if(marks>=40){grade='📘 Average';gc='#f59e0b';}
+    else if(marks>=0){grade='📉 Needs Work';gc='#ef4444';}
+    else{grade='⚠️ Negative Score';gc='#ef4444';}
+    ge.textContent=grade;ge.style.background=gc+'22';ge.style.color=gc;ge.style.border='1px solid '+gc+'44';
+
+    const L=['a','b','c','d'];
+    const list=document.getElementById('sc-review-list');list.innerHTML='';
+    QUESTIONS.forEach((q,i)=>{
+        const ans=userAnswers[i];
+        const isC=ans===q.correct,isS=ans===null;
+        let ic,il,ml,mc,ai;
+        if(isS){ic='skipped';il='—';ml='0';mc='zero';ai=`<span class="your-ans">Not attempted</span> · Correct: <span class="correct-ans">(${L[q.correct]}) ${q.opts[q.correct]}</span>`;}
+        else if(isC){ic='correct';il='✓';ml='+4';mc='pos';ai=`Your answer: <span class="your-ans">(${L[ans]}) ${q.opts[ans]}</span> ✅`;}
+        else{ic='wrong';il='✗';ml='−1';mc='neg';ai=`Your answer: <span class="your-ans">(${L[ans]}) ${q.opts[ans]}</span> · Correct: <span class="correct-ans">(${L[q.correct]}) ${q.opts[q.correct]}</span>`;}
+        const li=document.createElement('li');li.className='sc-item';
+        li.innerHTML=`<div class="sc-item-icon ${ic}">${il}</div><div class="sc-item-body"><div class="sc-item-q">Q${i+1}. ${q.text.replace(/^\d+\.\s*/,'')}</div><div class="sc-item-ans">${ai}</div></div><div class="sc-item-marks ${mc}">${ml}</div>`;
+        list.appendChild(li);
+    });
+    document.getElementById('scorecard-overlay').classList.add('visible');
+    if(window.MathJax)MathJax.typesetPromise([list]);
+}
+
+function closeScorecard(){document.getElementById('scorecard-overlay').classList.remove('visible');}
+
+buildQuestions();updateProgress();
+window.addEventListener('load',()=>{if(window.MathJax)MathJax.typesetPromise();});
+</script>
+</body>
+</html>
